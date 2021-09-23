@@ -33,8 +33,11 @@ python run experiment=ddpm_cifar10
 ```
 
 ## Models
-- [DDPM](#DDPM)
-- [NCSN](#NCSN)
+- [DDPM](#ddpm)
+- [NCSN](#ncsn)
+- [NCSNV2](#ncsnv2)
+- [DDIM](#ddim)
+- [Score SDE](#score-sde)
 
 ---
 
@@ -61,5 +64,41 @@ Yang Song, Stefano Ermon
 ```bash
 python run.py experiment=ncsn_cifar10
 ```
+---
 
+### NCSNV2
+_Improved Techniques for Training Score-Based Generative Models_
 
+#### Authors
+Yang Song, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ncsnv2_cifar10
+```
+
+---
+
+### DDIM
+_Denoising Diffusion Implicit Model_
+
+#### Authors
+Jiaming Song, Chenlin Meng, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ddim_cifar10
+```
+
+---
+
+### Score SDE
+_Score-Based Generative Modeling through Stochastic Differential Equations_
+
+#### Authors
+Yang Song, Jashcha Sohl-Dickstein, Diederik P.Kingma, Abhishek Kumar, Stefano Ermon, Ben Poole
+
+#### Run Example
+```bash
+python run.py experiment=score_sde_cifar10
+```
