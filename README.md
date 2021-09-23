@@ -32,8 +32,11 @@ pip install -r requirements.txt
 python run experiment=ddpm_cifar10
 ```
 
-### Models
+## Models
 - [DDPM](#DDPM)
+- [NCSN](#NCSN)
+
+---
 
 ### DDPM
 _Denoising Diffusion Probabilistic Model_
@@ -45,4 +48,18 @@ Jonathan Ho, Ajay Jain, Pieter Abbeel
 ```bash
 python run.py experiment=ddpm_cifar10
 ```
+
+---
+
+### NCSN
+_Generative Modeling by Estimating Gradients of the Data Distribution_
+
+#### Authors
+Yang Song, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ncsn_cifar10
+```
+
 
