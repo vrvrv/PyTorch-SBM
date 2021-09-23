@@ -1,0 +1,14 @@
+_target_: src.models.DDPM
+
+T: 1000
+ch: 128 # 128
+ch_mult: [1, 2, 2, 2] # [1, 2, 2, 2]
+attn: [1]
+num_res_blocks: 2 # 2
+dropout: 0.1
+beta_1: 1e-4
+beta_T: 0.02
+
+# Training
+warmup: 5000
+ema_decay: 0.9999

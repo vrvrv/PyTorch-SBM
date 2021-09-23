@@ -1,0 +1,10 @@
+# --------- hydra --------- #
+hydra-core==1.1.0
+hydra-colorlog==1.1.0
+hydra-optuna-sweeper==1.1.0
+
+# --------- loggers --------- #
+wandb
+
+# --------- others --------- #
+rich            # beautiful text formatting in terminal
