@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 ### How to run
 ```bash
-python run experiment=ddpm_cifar10
+python run.py experiment=ddpm_cifar10
 ```
 
 ## Models
