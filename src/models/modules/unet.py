@@ -1,11 +1,9 @@
-
 import math
 import torch
 from torch import nn
 from torch.nn import init
 from torch.nn import functional as F
 
-GROUPNORM=32
 
 class Swish(nn.Module):
     def forward(self, x):
@@ -16,7 +14,8 @@ class TimeEmbedding(nn.Module):
     def __init__(self, T, d_model, dim):
         assert d_model % 2 == 0
         super().__init__()
-        emb = torch.arange(0, d_model, step=2) / d_model * math.log(10000)
+        half_dim = d_model // 2
+        emb = torch.arange(half_dim, dtype=torch.float) / half_dim * math.log(10000)
         emb = torch.exp(-emb)
         pos = torch.arange(T).float()
         emb = pos[:, None] * emb[None, :]
@@ -72,16 +71,16 @@ class UpSample(nn.Module):
     def forward(self, x, temb):
         _, _, H, W = x.shape
         x = F.interpolate(
-            x, scale_factor=2, mode='nearest')
+            x, scale_factor=2, mode='nearest'
+        )
         x = self.main(x)
         return x
-
 
 
 class AttnBlock(nn.Module):
     def __init__(self, in_ch):
         super().__init__()
-        self.group_norm = nn.GroupNorm(GROUPNORM, in_ch)
+        self.group_norm = nn.GroupNorm(32, in_ch)
         self.proj_q = nn.Conv2d(in_ch, in_ch, 1, stride=1, padding=0)
         self.proj_k = nn.Conv2d(in_ch, in_ch, 1, stride=1, padding=0)
         self.proj_v = nn.Conv2d(in_ch, in_ch, 1, stride=1, padding=0)
@@ -120,7 +119,7 @@ class ResBlock(nn.Module):
     def __init__(self, in_ch, out_ch, tdim, dropout, attn=False):
         super().__init__()
         self.block1 = nn.Sequential(
-            nn.GroupNorm(GROUPNORM, in_ch),
+            nn.GroupNorm(32, in_ch),
             Swish(),
             nn.Conv2d(in_ch, out_ch, 3, stride=1, padding=1),
         )
@@ -129,7 +128,7 @@ class ResBlock(nn.Module):
             nn.Linear(tdim, out_ch),
         )
         self.block2 = nn.Sequential(
-            nn.GroupNorm(GROUPNORM, out_ch),
+            nn.GroupNorm(32, out_ch),
             Swish(),
             nn.Dropout(dropout),
             nn.Conv2d(out_ch, out_ch, 3, stride=1, padding=1),
@@ -165,7 +164,7 @@ class UNet(nn.Module):
     def __init__(self, T, ch, ch_mult, attn, num_res_blocks, dropout):
         super().__init__()
         assert all([i < len(ch_mult) for i in attn]), 'attn index out of bound'
-        tdim = ch * 2 # 4
+        tdim = ch * 4
         self.time_embedding = TimeEmbedding(T, ch, tdim)
 
         self.head = nn.Conv2d(3, ch, kernel_size=3, stride=1, padding=1)
@@ -202,7 +201,7 @@ class UNet(nn.Module):
         assert len(chs) == 0
 
         self.tail = nn.Sequential(
-            nn.GroupNorm(GROUPNORM, now_ch),
+            nn.GroupNorm(32, now_ch),
             Swish(),
             nn.Conv2d(now_ch, 3, 3, stride=1, padding=1)
         )
