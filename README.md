@@ -32,8 +32,14 @@ pip install -r requirements.txt
 python run experiment=ddpm_cifar10
 ```
 
-### Models
-- [DDPM](#DDPM)
+## Models
+- [DDPM](#ddpm)
+- [NCSN](#ncsn)
+- [NCSNV2](#ncsnv2)
+- [DDIM](#ddim)
+- [Score SDE](#score-sde)
+
+---
 
 ### DDPM
 _Denoising Diffusion Probabilistic Model_
@@ -46,3 +52,53 @@ Jonathan Ho, Ajay Jain, Pieter Abbeel
 python run.py experiment=ddpm_cifar10
 ```
 
+---
+
+### NCSN
+_Generative Modeling by Estimating Gradients of the Data Distribution_
+
+#### Authors
+Yang Song, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ncsn_cifar10
+```
+---
+
+### NCSNV2
+_Improved Techniques for Training Score-Based Generative Models_
+
+#### Authors
+Yang Song, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ncsnv2_cifar10
+```
+
+---
+
+### DDIM
+_Denoising Diffusion Implicit Model_
+
+#### Authors
+Jiaming Song, Chenlin Meng, Stefano Ermon
+
+#### Run Example
+```bash
+python run.py experiment=ddim_cifar10
+```
+
+---
+
+### Score SDE
+_Score-Based Generative Modeling through Stochastic Differential Equations_
+
+#### Authors
+Yang Song, Jashcha Sohl-Dickstein, Diederik P.Kingma, Abhishek Kumar, Stefano Ermon, Ben Poole
+
+#### Run Example
+```bash
+python run.py experiment=score_sde_cifar10
+```
