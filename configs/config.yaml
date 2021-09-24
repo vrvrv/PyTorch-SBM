@@ -28,14 +28,14 @@ callbacks:
     monitor: "valid_loss"
     save_top_k: 2
     save_last: True
-    mode: "max"
+    mode: "min"
     dirpath: "checkpoints/"
     filename: "sample-{epoch:02d}"
   early_stopping:
     _target_: pytorch_lightning.callbacks.EarlyStopping
     monitor: "valid_loss"
     patience: 10
-    mode: "max"
+    mode: "min"
 
 logger:
   wandb:
@@ -65,4 +65,4 @@ ignore_warnings: True
 
 # check performance on test set, using the best model achieved during training
 # lightning chooses best model based on metric specified in checkpoint callback
-test_after_training: True
+test_after_training: False

@@ -1,5 +1,0 @@
-defaults:
-  - default.yaml
-
-gpus: 4
-plugins: ddp_sharded

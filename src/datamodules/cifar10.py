@@ -23,12 +23,12 @@ class CIFAR10DataModule(LightningDataModule):
     """
 
     def __init__(
-        self,
-        data_dir: str,
-        train_val_test_split: Tuple[float, float, float],
-        batch_size: int,
-        num_workers: int,
-        pin_memory: bool,
+            self,
+            data_dir: str,
+            train_val_test_split: Tuple[float, float, float],
+            batch_size: int,
+            num_workers: int,
+            pin_memory: bool,
     ):
         super().__init__()
 
