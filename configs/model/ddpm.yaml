@@ -12,3 +12,6 @@ beta_T: 0.02
 # Training
 warmup: 5000
 ema_decay: 0.9999
+
+# Sampling
+sample_size: 64

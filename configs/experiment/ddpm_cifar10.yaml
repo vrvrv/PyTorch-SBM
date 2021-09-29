@@ -1,0 +1,10 @@
+# @package _global_
+
+seed: 12345
+
+model:
+  img_size: 32
+
+logger:
+  wandb:
+    name: ddpm_cifar10
