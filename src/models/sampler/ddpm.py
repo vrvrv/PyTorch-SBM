@@ -13,16 +13,13 @@ def extract(v, t, x_shape):
 
 
 class DDPMSampler(nn.Module):
-    def __init__(self, model, beta_1, beta_T, T, img_size=32,
-                 mean_type='epsilon', var_type='fixedlarge'):
-        assert mean_type in ['xprev' 'xstart', 'epsilon']
+    def __init__(self, model, beta_1, beta_T, T, img_size=32, var_type='fixedlarge'):
         assert var_type in ['fixedlarge', 'fixedsmall']
         super().__init__()
 
         self.model = model
         self.T = T
         self.img_size = img_size
-        self.mean_type = mean_type
         self.var_type = var_type
 
         self.register_buffer(
@@ -75,16 +72,6 @@ class DDPMSampler(nn.Module):
                 extract(self.sqrt_recipm1_alphas_bar, t, x_t.shape) * eps
         )
 
-    def predict_xstart_from_xprev(self, x_t, t, xprev):
-        assert x_t.shape == xprev.shape
-        return (  # (xprev - coef2*x_t) / coef1
-                extract(
-                    1. / self.posterior_mean_coef1, t, x_t.shape) * xprev -
-                extract(
-                    self.posterior_mean_coef2 / self.posterior_mean_coef1, t,
-                    x_t.shape) * x_t
-        )
-
     def p_mean_variance(self, x_t, t):
         # below: only log_variance is used in the KL computations
         model_log_var = {
@@ -97,20 +84,10 @@ class DDPMSampler(nn.Module):
         model_log_var = extract(model_log_var, t, x_t.shape)
 
         # Mean parameterization
-        if self.mean_type == 'xprev':  # the model predicts x_{t-1}
-            x_prev = self.model(x_t, t)
-            x_0 = self.predict_xstart_from_xprev(x_t, t, xprev=x_prev)
-            model_mean = x_prev
-        elif self.mean_type == 'xstart':  # the model predicts x_0
-            x_0 = self.model(x_t, t)
-            model_mean, _ = self.q_mean_variance(x_0, x_t, t)
-        elif self.mean_type == 'epsilon':  # the model predicts epsilon
-            eps = self.model(x_t, t)
-            x_0 = self.predict_xstart_from_eps(x_t, t, eps=eps)
-            model_mean, _ = self.q_mean_variance(x_0, x_t, t)
-        else:
-            raise NotImplementedError(self.mean_type)
-        x_0 = torch.clip(x_0, -1., 1.)
+        eps = self.model(x_t, t)
+        x_0 = self.predict_xstart_from_eps(x_t, t, eps=eps)
+        x_0 = torch.clip(x_0, -1, 1)
+        model_mean, _ = self.q_mean_variance(x_0, x_t, t)
 
         return model_mean, model_log_var
 
@@ -128,5 +105,5 @@ class DDPMSampler(nn.Module):
             else:
                 noise = 0
             x_t = mean + torch.exp(0.5 * log_var) * noise
-        x_0 = x_t
-        return torch.clip(x_0, -1, 1)
+
+        return x_t

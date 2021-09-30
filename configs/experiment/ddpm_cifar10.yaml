@@ -8,3 +8,6 @@ model:
 logger:
   wandb:
     name: ddpm_cifar10
+
+trainer:
+  resume_from_checkpoint: False
