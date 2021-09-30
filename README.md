@@ -51,6 +51,13 @@ Jonathan Ho, Ajay Jain, Pieter Abbeel
 python run.py experiment=ddpm_cifar10
 ```
 
+<p align="center">
+    <img src="assets/ddpm.png" width="360"\>
+</p>
+
+#### References
+- [w86763777's PyTorch implementation of DDPM](https://github.com/w86763777/pytorch-ddpm)
+
 ---
 
 ### NCSN
