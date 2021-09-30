@@ -113,6 +113,12 @@ python run.py experiment=score_sde_cifar10
 
 # Comparision
 
+We can calculate FID and IS score on each models
+
+```bash
+python test.py expeirment=ddpm_cifar10 trainer.resume_from_checkpoint=ddpm/cifar10_epoch53.ckpt
+```
+
 | Model       | FID | IS  |
 | ---         | --- | --- |
 | DDPM        |  0  | 0   |
