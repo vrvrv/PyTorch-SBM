@@ -1,7 +1,8 @@
 # --------- torch --------- #
 torch==1.9.0
 torchvision
-pytorch-lightning==1.4.5
+pytorch-lightning==1.4.8
+torch-fidelity
 
 # --------- hydra --------- #
 hydra-core==1.1.0
@@ -13,3 +14,4 @@ wandb
 
 # --------- others --------- #
 rich            # beautiful text formatting in terminal
+scipy

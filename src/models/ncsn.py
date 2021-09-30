@@ -32,7 +32,7 @@ def extract(v, t, x_shape):
     return out.view([t.shape[0]] + [1] * (len(x_shape) - 1))
 
 
-class DDPM(pl.LightningModule):
+class NCSN(pl.LightningModule):
     def __init__(
             self,
             T: int,

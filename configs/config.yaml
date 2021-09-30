@@ -34,21 +34,18 @@ callbacks:
   early_stopping:
     _target_: pytorch_lightning.callbacks.EarlyStopping
     monitor: "valid_loss"
-    patience: 10
+    patience: 10000
     mode: "min"
+
 
 logger:
   wandb:
     _target_: pytorch_lightning.loggers.wandb.WandbLogger
     project: "Score Based Generative Model"
-    name: null
     save_dir: "."
-    offline: False # set True to store all logs only locally
     id: null # pass correct id to resume experiment!
     log_model: False
-    prefix: ""
     job_type: "train"
-    group: ""
     tags: []
 
 # use `python run.py debug=true` for easy debugging!
