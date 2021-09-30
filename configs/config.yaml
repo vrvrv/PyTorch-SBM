@@ -45,7 +45,6 @@ logger:
     save_dir: "."
     id: null # pass correct id to resume experiment!
     log_model: False
-    job_type: "train"
     tags: []
 
 # use `python run.py debug=true` for easy debugging!
@@ -59,7 +58,3 @@ print_config: True
 
 # disable python warnings if they annoy you
 ignore_warnings: True
-
-# check performance on test set, using the best model achieved during training
-# lightning chooses best model based on metric specified in checkpoint callback
-test_after_training: False

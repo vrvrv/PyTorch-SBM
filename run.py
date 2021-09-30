@@ -10,11 +10,13 @@ from omegaconf import DictConfig
 def main(config: DictConfig):
     from src import utils
     from src.train import train
+    from src.test import test
 
     if config.get("print_config"):
         utils.print_config(config, resolve=True)
 
-    return train(config)
+    # job type is train or test
+    eval(config.get("job_type"))(config)
 
 
 if __name__ == "__main__":
