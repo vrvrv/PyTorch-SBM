@@ -16,7 +16,7 @@ Contributions and suggestions of SBMs to implement are very welcomed.
 ### Requirements
 - Python >= 3.8
 - PyTorch >= 1.9
-- Pytorch Lightning >= 1.4.5
+- Pytorch Lightning >= 1.4.8
 - CUDA enabled computing device
 
 ### Installation
