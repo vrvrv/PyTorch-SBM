@@ -8,6 +8,9 @@ model:
 logger:
   wandb:
     name: ddpm_cifar10
+    job_type: train
 
 trainer:
   resume_from_checkpoint: False
+
+job_type: train

@@ -12,6 +12,8 @@ from .sampler import DDPMSampler
 from torchvision.utils import make_grid
 import wandb
 
+from torchmetrics import FID, IS
+
 
 def ema(source, target, decay):
     source_dict = source.state_dict()
@@ -21,6 +23,19 @@ def ema(source, target, decay):
             target_dict[key].data * decay +
             source_dict[key].data * (1 - decay)
         )
+
+
+def normalize_0_255(tensor):
+    batch, ch, s1, s2 = tensor.size()
+
+    tensor = tensor.view(batch, -1)
+
+    tensor -= tensor.min(1, keepdim=True)[0]
+    tensor /= tensor.max(1, keepdim=True)[0]
+
+    tensor = tensor.view(batch, ch, s1, s2)
+
+    return (tensor * 255).type(torch.uint8)
 
 
 def extract(v, t, x_shape):
@@ -90,6 +105,8 @@ class DDPM(pl.LightningModule):
 
         self.x_T = torch.randn(sample_size, 3, img_size, img_size)
 
+        self.is_score = IS(feature=2048, compute_on_step=True)
+
     def setup(self, stage: Optional[str] = None) -> None:
         # Evaluation
         #
@@ -157,6 +174,20 @@ class DDPM(pl.LightningModule):
         self.logger.experiment[0].log(
             {"val/generated_images": [wandb.Image(make_grid(outs, nrow=6, normalize=True), caption=caption)]}
         )
+
+    def test_step(self, batch, batch_idx):
+        x_0, y = batch
+        noise = torch.randn(x_0.size(), device=self.device)
+
+        outs = self.denoise(noise)
+
+        outs = normalize_0_255(outs)
+        is_score_mean, is_score_std = self.is_score(outs)
+
+        self.log_dict({
+            "test_is_score_mean": is_score_mean,
+            "test_is_score_std": is_score_std
+        }, on_step=True, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=2e-4)
