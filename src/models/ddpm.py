@@ -135,7 +135,7 @@ class DDPM(pl.LightningModule):
         # Denoise the original sample
 
         sampler = DDPMSampler(
-            self.score, beta_1=self.hparams.beta_1, beta_T=self.hparams.beta_T, T=self.hparams.T,
+            self.ema_score, beta_1=self.hparams.beta_1, beta_T=self.hparams.beta_T, T=self.hparams.T,
             var_type=self.hparams.var_type
         ).to(x_T.device)
 
@@ -152,7 +152,15 @@ class DDPM(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x_0, y = batch
-        loss = self(x_0).mean()
+
+        t = torch.randint(self.hparams.T, size=(x_0.shape[0],), device=self.device)
+
+        noise = torch.randn_like(x_0, device=self.device)
+        x_t = (
+                extract(v=self.sqrt_alphas_bar, t=t, x_shape=x_0.shape) * x_0 +
+                extract(v=self.sqrt_one_minus_alphas_bar, t=t, x_shape=x_0.shape) * noise
+        )
+        loss = F.mse_loss(self.ema_score(x_t, t), noise, reduction='none').mean()
 
         self.log("valid_loss", loss, on_step=False, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
 
