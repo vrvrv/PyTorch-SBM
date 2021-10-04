@@ -1,0 +1,15 @@
+_target_: src.models.NCSN
+
+# Training
+ngf: 128
+num_classes: 10
+sigma_begin: 1
+sigma_end: 0.01
+step_size: 0.00001
+
+
+warmup: 5000
+ema_decay: 0.9999
+
+# Sampling
+sample_size: 64

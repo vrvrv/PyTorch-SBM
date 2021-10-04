@@ -160,7 +160,7 @@ class ResBlock(nn.Module):
         return h
 
 
-class UNet(nn.Module):
+class WideResnet(nn.Module):
     def __init__(self, T, ch, ch_mult, attn, num_res_blocks, dropout):
         super().__init__()
         assert all([i < len(ch_mult) for i in attn]), 'attn index out of bound'

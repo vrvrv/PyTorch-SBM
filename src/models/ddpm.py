@@ -7,7 +7,7 @@ import torch
 import torch.nn.functional as F
 
 import pytorch_lightning as pl
-from .modules import UNet
+from .modules import WideResnet
 from .sampler import DDPMSampler
 from torchvision.utils import make_grid
 import wandb
@@ -78,7 +78,7 @@ class DDPM(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.unet = UNet(
+        self.score = WideResnet(
             T=T,
             ch=ch,
             ch_mult=ch_mult,
@@ -87,7 +87,7 @@ class DDPM(pl.LightningModule):
             dropout=dropout
         )
 
-        self.ema_unet = copy.deepcopy(self.unet)
+        self.ema_score = copy.deepcopy(self.score)
 
         self.register_buffer(
             'betas', torch.linspace(beta_1, beta_T, T).double()
@@ -128,14 +128,14 @@ class DDPM(pl.LightningModule):
                 extract(v=self.sqrt_alphas_bar, t=t, x_shape=x_0.shape) * x_0 +
                 extract(v=self.sqrt_one_minus_alphas_bar, t=t, x_shape=x_0.shape) * noise
         )
-        loss = F.mse_loss(self.unet(x_t, t), noise, reduction='none')
+        loss = F.mse_loss(self.score(x_t, t), noise, reduction='none')
         return loss
 
     def denoise(self, x_T):
         # Denoise the original sample
 
         sampler = DDPMSampler(
-            self.unet, beta_1=self.hparams.beta_1, beta_T=self.hparams.beta_T, T=self.hparams.T,
+            self.score, beta_1=self.hparams.beta_1, beta_T=self.hparams.beta_T, T=self.hparams.T,
             var_type=self.hparams.var_type
         ).to(x_T.device)
 
@@ -147,7 +147,7 @@ class DDPM(pl.LightningModule):
         loss = self(X).mean()
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True, logger=True)
         with torch.no_grad():
-            ema(self.unet, self.ema_unet, self.hparams.ema_decay)
+            ema(self.score, self.ema_score, self.hparams.ema_decay)
         return loss
 
     def validation_step(self, batch, batch_idx):
