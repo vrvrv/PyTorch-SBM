@@ -23,7 +23,8 @@ class DDPMSampler(nn.Module):
         self.var_type = var_type
 
         self.register_buffer(
-            'betas', torch.linspace(beta_1, beta_T, T).double())
+            'betas', torch.linspace(beta_1, beta_T, T).double()
+        )
         alphas = 1. - self.betas
         alphas_bar = torch.cumprod(alphas, dim=0)
         alphas_bar_prev = F.pad(alphas_bar, [1, 0], value=1)[:T]
