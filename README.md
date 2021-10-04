@@ -16,7 +16,7 @@ Contributions and suggestions of SBMs to implement are very welcomed.
 ### Requirements
 - Python >= 3.8
 - PyTorch >= 1.9
-- Pytorch Lightning >= 1.4.5
+- Pytorch Lightning >= 1.4.8
 - CUDA enabled computing device
 
 ### Installation
@@ -31,7 +31,7 @@ pip install -r requirements.txt
 python run.py experiment=ddpm_cifar10
 ```
 
-## Models
+# Models
 - [DDPM](#ddpm)
 - [NCSN](#ncsn)
 - [NCSNV2](#ncsnv2)
@@ -40,7 +40,7 @@ python run.py experiment=ddpm_cifar10
 
 ---
 
-### DDPM
+## DDPM
 _Denoising Diffusion Probabilistic Model_
 
 #### Authors
@@ -60,7 +60,7 @@ python run.py experiment=ddpm_cifar10
 
 ---
 
-### NCSN
+## NCSN
 _Generative Modeling by Estimating Gradients of the Data Distribution_
 
 #### Authors
@@ -72,7 +72,7 @@ python run.py experiment=ncsn_cifar10
 ```
 ---
 
-### NCSNV2
+## NCSNV2
 _Improved Techniques for Training Score-Based Generative Models_
 
 #### Authors
@@ -98,7 +98,7 @@ python run.py experiment=ddim_cifar10
 
 ---
 
-### Score SDE
+## Score SDE
 _Score-Based Generative Modeling through Stochastic Differential Equations_
 
 #### Authors
@@ -108,3 +108,20 @@ Yang Song, Jashcha Sohl-Dickstein, Diederik P.Kingma, Abhishek Kumar, Stefano Er
 ```bash
 python run.py experiment=score_sde_cifar10
 ```
+
+---
+
+# Comparision
+
+We can calculate FID and IS score on each models
+
+```bash
+python test.py expeirment=ddpm_cifar10 trainer.resume_from_checkpoint=ddpm/cifar10_epoch53.ckpt
+```
+
+| Model       | FID | IS  |
+| ---         | --- | --- |
+| DDPM        |  0  | 0   |
+| NCSN        |  0  | 0   |
+| NCSNV2      |  0  | 0   |
+| Score SDE   |  0  | 0   |
